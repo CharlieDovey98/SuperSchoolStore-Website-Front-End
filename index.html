@@ -4,16 +4,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EKitty</title>
+    <!-- Below is the link to the stylesheet CSS file -->
+    <link rel="stylesheet" href="https://github.com/CharlieDovey98/SuperSchoolStore-Website-Back-End/blob/main/Public/CSS/style.css">
+    <!-- Below is the link to the JavaScript file -->
+    <script src="https://github.com/CharlieDovey98/SuperSchoolStore-Website-Back-End/blob/main/Public/Javascript/script.js" defer></script>
+    <!-- Below is the link for the Vue.js package -->
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <title>SuperSchoolStore</title>
 </head>
 
 <body>
-    <h1>EKitty</h1>
-    <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum."</p>
+    <!-- Below is the header and navigation aspect of the website-->
+    <div id="App">
+        <div id="headerContainer">
+            <header class="indexPageHeader">
+                <div class="homeDiv" v-on:click="showAboutUs">
+                    <img src="Images/education.png" alt="Logo" class="s3Logo">
+                    <p>S3</p>
+                </div>
+                <h1>SuperSchoolStore</h1>
+                <div class="shoppingDiv" v-on:click="showShoppingPage">
+                    <img src="Images/certificate.png" alt="Go To Shop" class="shopLessonsPNG">
+                    <p>Go Shopping</p>
+                </div>
+                <div class="checkoutDiv" v-on:click="showCheckoutPage">
+                    <img src="Images/shoppingCart.png" alt="Checkout" class="shoppingCartPNG">
+                    <span class="cartItems" v-if="currentPage !== 'checkout'">Checkout {{ itemsInTheCart }} </span>
+                    <span class="cartItems" v-else>Back To Shopping </span>
+                  </div>
+        </div>
+        </header>
+        <main>
+            <!-- Below is the landing 'page' and about us aspect of the website-->
+            <section id="landingPage" v-show="currentPage === 'aboutUs'">
+                <div class="aboutUs">
+                    <h2>Welcome to SuperSchoolStore S3!</h2>
+                    <p>
+                        We specialize in offering a comprehensive range of
+                        courses
+                        tailored to suit
+                        various learning needs across subjects like languages, science, IT, mathematics, and geography.
+                        Our programs range
+                        from three to twelve months, providing in-depth coverage and professional guidance in each
+                        subject area.
+                    </p>
+                    <p>
+                        At S3, we’re committed to supporting your learning journey every step of the way.<br>
+                        To date, <strong>{{customerPurchases}} Students</strong> have chosen to learn with S3!<br>
+                        Our courses include:
+                    </p>
+                    <ul>
+                        <li><strong>1-on-1 Support and Feedback:</strong><br>Our dedicated instructors and lecturers
+                            offer
+                            personalized
+                            support and guidance, ensuring that you can address any questions or difficulties in real
+                            time.</li>
+                        <li><strong>Flexible Scheduling:</strong><br>Lessons are offered multiple times per week,
+                            allowing
+                            you to fit learning around your schedule with both live and recorded sessions.</li>
+                        <li><strong>Homework and Peer Review Activities:</strong><br>Engage with peers, complete
+                            assignments, and participate in peer-review activities to reinforce learning and gain
+                            different perspectives.</li>
+                        <li><strong>Certification upon Completion:</strong><br>Every student who completes a course
+                            receives a certificate, helping boost qualifications and validate your skills for future
+                            opportunities.</li>
+                    </ul>
+                    <p>
+                        <br><br>Our programs are designed to provide not just knowledge but also practical experience.
+                        Over
+                        <strong>85%</strong> of our
+                        graduates successfully pass their courses and receive their certifications. Furthermore, nearly
+                        <strong>70%</strong> of our
+                        students go on to secure roles within their chosen industries, applying the skills and expertise
+                        gained in our lessons.
+                    </p>
+                    <p>
+                        Whether you’re starting fresh or advancing your career, S3 provides a supportive and
+                        results-driven environment
+                        where you can achieve your learning goals and set yourself up for future success.
+                        <br><br><a v-on:click="showShoppingPage(); scrollToTop()" id="shopAllLessons">Click Here to Shop all
+                            lessons.</a>
+                    </p>
+                </div>
+
+                <div class="lessonCategories">
+                    <h2>Lesson Categories Available To Purchase</h2>
+                    <ul>
+                        <li><strong>Languages: </strong>French, Spanish, German, English Literature, English Language
+                        </li>
+                        <li><strong>Science: </strong>Chemistry, Biology, Physics, Astronomy and Solar System Studies
+                        </li>
+                        <li><strong>Internet Technology: </strong>Computer Science, Networking, Cyber Security, AI and
+                            Machine Learning</li>
+                        <li><strong>Mathematics: </strong>Algebra Basics, Geometry Essentials, Arithmetic Fundamentals,
+                            Advanced Algebra</li>
+                        <li><strong>Geography: </strong>World Geography, World Politics, Environmental Geography</li>
+                    </ul>
+                </div>
+
+                <div class="whyChooseUs">
+                    <h2>Why Choose Us?</h2>
+                    <p>At S3, we are committed to providing quality education that is accessible and affordable. Our
+                        experienced instructors, carefully curated materials, and flexible learning options make us the
+                        top choice for lifelong learners. Join us to start your journey today!</p>
+                </div>
+            </section>
+            <!-- Below is the shopping 'page' and lesson purchase aspect of the website-->
+            <section id="shoppingPage" v-show="currentPage === 'shopping'">
+                <h2>Available S3 Lessons, Start Your Learning Here:</h2>
+
+                <div class="filter-by-div">
+                    <!-- Below is the keyword search, section of the lessons webpage. -->
+                    <div>
+                        <input class="keyword-search" type="text" v-model="searchQuery"
+                            placeholder=" Search For lessons..." />
+                    </div>
+                    <!-- Below of the checkbox, filtering section of lessons webpage. -->
+                    <div class="lesson-filters-containment-div">
+                        <div class="inner-filters-div">
+                            <label class="filter-by-label">
+                                <!-- Type="radio" allows for checkboxes to be linked by name="", with only one selected at a time. -->
+                                <input class="lessons-sort-checkbox" type="radio" name="sort-option" value="subject"
+                                    v-model="selectedSortAspect" />
+                                Subject
+                            </label>
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="sort-option" value="location"
+                                    v-model="selectedSortAspect" />
+                                Location
+                            </label>
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="sort-option" value="price"
+                                    v-model="selectedSortAspect" />
+                                Price
+                            </label>
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="sort-option"
+                                    value="courseLength" v-model="selectedSortAspect" />
+                                Length
+                            </label>
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="sort-option"
+                                    value="spacesAvailable" v-model="selectedSortAspect" />
+                                Availability
+                            </label>
+                        </div>
+                        <div class="inner-filters-div">
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="display-option"
+                                    value="ascending" v-model="sortOrder" />
+                                Ascending
+                            </label>
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="display-option"
+                                    value="descending" v-model="sortOrder" />
+                                Descending
+                            </label>
+                            <label class="filter-by-label">
+                                <input class="lessons-sort-checkbox" type="radio" name="display-option"
+                                    v-on:change="resetFilters" />
+                                No filters
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+                <p class="filter-information-prompt">Please refine your search through the filters and keyword searching
+                    above.</p>
+                <div class="lesson" v-for="lesson in updatedLessons" :key="lesson.id">
+                    <figure>
+                        <img v-bind:src="lesson.image" class="lesson-image" :alt="lesson.title">
+                    </figure>
+                    <div class="lesson-info">
+                        <h3 v-text="lesson.title"></h3>
+                        <p v-text="lesson.description"></p>
+                        <!-- {{}} double braces is text interpolation, allowing data to be manupulated within. -->
+                        <p><strong>Subject:</strong> {{ lesson.subject }}</p>
+                        <p><strong>Location:</strong> {{ lesson.location }}</p>
+                        <p><strong>Price:</strong> £{{ lesson.price.toFixed(2) }}</p>
+                        <p><strong>Spaces Available:</strong>
+                            <span v-if="lesson.spacesAvailable === 0">No spaces left</span>
+                            <span v-else-if="lesson.spacesAvailable <= 1">Hurry, only {{ lesson.spacesAvailable }} space
+                                left!</span>
+                            <span v-else-if="lesson.spacesAvailable <= 3">Hurry, only {{ lesson.spacesAvailable }}
+                                spaces left!</span>
+                            <span v-else>{{ lesson.spacesAvailable }} spaces available</span>
+                        </p>
+                        <p><strong>Length:</strong> {{ lesson.courseLength }} months</p>
+                    </div>
+                    <div class="lesson-add-button-div">
+                        <button id="addLessonToCartButton" class="addButton" v-on:click="addToCart(lesson)"
+                            :disabled="lesson.spacesAvailable <= 0">Add to Cart</button>
+                    </div>
+                </div>
+
+            </section>
+            <!-- Below is the checkout 'page' and lesson purchasing aspect of the website-->
+            <section id="checkoutPage" v-show="currentPage === 'checkout'">
+                <h2>Checkout</h2>
+                <div v-if="cart.length">
+                    <ul>
+                        <li v-for="(lesson, lessonIndex) in cart" :key="lesson.id">
+                            <div class="lessons-in-cart">
+                                <figure>
+                                    <img v-bind:src="lesson.image" class="lessonImageInCart" :alt="lesson.title">
+                                </figure>
+                                {{ lesson.title }} at {{lesson.location}} £{{ lesson.price.toFixed(2) }}
+                            </div>
+                            <button v-on:click="removeFromCart(lessonIndex)">Remove</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="cartTotal">
+                    
+                    <p><strong>Cart Total:</strong> £{{ totalCartPrice }}</p>
+                </div>
+                <div v-else>
+                    <p>Your cart is empty. Please add lessons to your cart to continue with your purchase.</p>
+                </div>
+
+                <!-- Below is the user information, form input-->
+                <form v-on:submit.prevent="submitCheckout">
+                    <h3>Purchase Information</h3>
+                    <label>
+                        First Name:
+                        <input type="text" v-model="user.firstName" required/>
+                    </label>
+                    <label>
+                        Surname:
+                        <input type="text" v-model="user.lastName" required/>
+                    </label>
+                    <label>
+                        Email:
+                        <input type="email" v-model="user.email" required/>
+                    </label>
+                    <label>
+                        Confirm Email:
+                        <input type="email" v-model="user.confirmEmail" required/>
+                    </label>
+                    <label>
+                        Phone Number:
+                        <input type="tel" v-model="user.phoneNumber" required/>
+                    </label>
+                    <label>
+                        Password:
+                        <input type="password" v-model="user.password" required/>
+                    </label>
+                    <label>
+                        Confirm Password:
+                        <input type="password" v-model="user.confirmPassword" required/>
+                    </label>
+
+                    <h3>Payment Information</h3>
+                    <label>
+                        Card Number:
+                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####" required/>
+                    </label>
+                    <label>
+                        Expiry Date:
+                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY" required/>
+                    </label>
+                    <label>
+                        CVV:
+                        <input type="tel" v-model="payment.cvv" placeholder="###" required/>
+                    </label>
+
+                    <!-- Below is the terms and conditions checkbox -->
+                    <label>
+                        <input type="checkbox" v-model="user.termsAccepted"  required/>
+                        I have read and agree to the Terms and Conditions
+                    </label>
+
+                    <button type="submit" :disabled="!canCheckout">Checkout</button>
+                </form>
+            </section>
+
+        </main>
+        <!-- Below is the footer aspect of the website containing a scroll to the top feature -->
+        <div class="footerSection">
+            <div class="footerDiv">
+                <div>
+                    <a v-on:click="scrollToTop" id="scrollToTop">Scroll To The Top</a>
+
+                </div>
+                <p>SuperSchoolStore S3 &copy; 2024&nbsp;&nbsp;&nbsp;&nbsp;Created by Charlie Dovey M00843428.</p>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
