@@ -1,0 +1,554 @@
+/* CSS styling for the S3 Website. */
+
+/* Below is all the CSS for the Scroll Bar  */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7d8b9e;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #57616e;
+}
+/* ----- */
+
+/* General Styling */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+/* Body Styling */
+body {
+  display: flex;
+  justify-content: center;
+  background-color: #263135;
+  color: white;
+  min-height: 100vh;
+}
+/* App Styling */
+#App {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  flex-grow: 1;
+}
+/* Main Layout */
+main {
+  display: inline-block;
+}
+/* ----- */
+
+/* Header Styling */
+#headerContainer {
+  width: 100%;
+  background-color: #013143;
+  border-bottom: 3px solid #263135;
+  padding: 3px;
+  margin: 0 0 1% 0;
+}
+
+.indexPageHeader {
+  display: flex;
+  font-size: 1.4em;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.homeDiv {
+  display: flex;
+  align-items: center;
+}
+
+.homeDiv:hover {
+  cursor: pointer;
+}
+
+.s3Logo {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.homeDiv p {
+  color: rgb(183, 201, 207);
+  font-size: 2em;
+  margin: 0;
+}
+
+.indexPageHeader h1 {
+  font-size: 2em;
+  color: rgb(183, 201, 207);
+}
+
+.shoppingDiv {
+  display: flex;
+  align-items: center;
+}
+
+.shoppingDiv:hover {
+  cursor: pointer;
+}
+
+.shopLessonsPNG {
+  width: 50px;
+  height: 60px;
+  margin-right: 5px;
+}
+
+.shoppingDiv p {
+  color: rgb(183, 201, 207);
+  font-size: 1em;
+  margin: 0;
+}
+
+.checkoutDiv {
+  display: flex;
+  align-items: center;
+}
+
+.checkoutDiv:hover {
+  cursor: pointer;
+}
+
+.shoppingCartPNG {
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
+}
+
+.checkoutDiv p {
+  color: rgb(183, 201, 207);
+  font-size: 1em;
+  margin: 0;
+}
+
+.cartItems {
+  margin-left: 5px;
+}
+/* ----- */
+
+/* Landing 'Page' Styling */
+#landingPage {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 80%;
+  margin: 20px auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#landingPage h2 {
+  font-size: 1.8em;
+  color: #26586a;
+  border-bottom: 2px solid #2990b6;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+/* About Us Styling */
+.aboutUs {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 80%;
+}
+
+.aboutUs p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: black;
+  margin-bottom: 15px;
+}
+
+.aboutUs ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  text-align: left;
+  color: black;
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+.aboutUs ul li {
+  margin: 20px 0 20px 50px;
+}
+
+.aboutUs strong {
+  color: #26586a;
+}
+
+#shopAllLessons {
+  font-size: 1.4em;
+  font-weight: 400;
+  color: #013143;
+  text-decoration: underline;
+}
+#shopAllLessons:hover {
+  color: #2990b6;
+  cursor: pointer;
+}
+
+/* Lesson Categories Styling */
+.lessonCategories {
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.lessonCategories strong {
+  color: #26586a;
+}
+
+.lessonCategories ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  font-size: 1.1em;
+  line-height: 1.5;
+  color: black;
+}
+
+.lessonCategories li {
+  margin-bottom: 10px;
+}
+
+/* Why Choose Us Styling */
+.whyChooseUs {
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.whyChooseUs p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: black;
+  max-width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+/* ----- */
+
+/* Shopping 'Page' Styling */
+#shoppingPage {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#shoppingPage h2 {
+  color: #013143;
+  text-align: center;
+}
+
+.filter-information-prompt {
+  color: black;
+  font-size: 0.7em;
+  border-bottom: 1px solid #2990b6;
+  padding-bottom: 2vh;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+.filter-by-div {
+  display: flex;
+  gap: 20px;
+  padding: 15px;
+  max-width: 800px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lesson-filters-containment-div {
+  display: flex;
+  flex-direction: column;
+}
+
+.inner-filters-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-by-label {
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+  margin: 10px 0 10px 0;
+  font-size: 1em;
+  font-weight: bold;
+  color: #26586a;
+}
+
+.keyword-search {
+  padding: 10px;
+  border: 1px solid #bebebe;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.lessons-sort-checkbox {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+/* Lesson Styling */
+.lesson {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #bebebe;
+  padding-bottom: 15px;
+}
+
+.lesson-image {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.lesson-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.lesson-info h3 {
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.lesson-info p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.lesson-info p strong {
+  font-size: 1em;
+  font-weight: bold;
+  color: #555;
+}
+
+.lesson-add-button-div {
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Button Styling */
+.addButton {
+  background-color: #437283;
+  border: none;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  text-align: center;
+  white-space: nowrap;
+  transition: background-color 0.5s ease;
+}
+.addButton:hover { /* When hovering over the button. */
+  background-color: #2990b6;
+}
+.addButton:disabled { /* CSS changes when the button is disabled. */
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.addButton:disabled:hover { /* CSS changes for the disabled button when the cursor is hovering over the button. */
+  background-color: #b62948;
+}
+/* ----- */
+
+/* Checkout 'Page' Styling */
+#checkoutPage {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  color: #555;
+}
+
+/* Checkout Header */
+#checkoutPage h2 {
+  font-size: 1.8em;
+  color: #26586a;
+  border-bottom: 2px solid #2990b6;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Cart Items List */
+#checkoutPage ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+#checkoutPage ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #bebebe;
+}
+
+#checkoutPage ul li button {
+  background-color: #437283;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+#checkoutPage ul li button:hover {
+  background-color: #2990b6;
+}
+
+.lessons-in-cart {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lessonImageInCart {
+  width: 60px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.cartTotal{
+  text-align: center;
+  border-bottom: 1px solid #26586a;
+  padding-bottom: 10px;
+}
+.cartTotal p {
+  color: #26586a;
+  font-size: 1.5em;
+}
+
+/* User information & payment form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+form label {
+  font-weight: bold;
+  color: #26586a;
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="password"] {
+  padding: 10px;
+  border: 1px solid #bebebe;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+form h3 {
+  font-size: 1.2em;
+  color: #26586a;
+  margin-bottom: 5px;
+}
+
+form button {
+  background-color: #437283;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.5s ease;
+  width: 100%;
+  margin-top: 15px;
+}
+
+form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+form button:disabled:hover {
+  background-color: #b62948;
+}
+
+form button:hover:enabled {
+  background-color: #2990b6;
+}
+/* ----- */
+
+/* Footer Styling */
+.footerSection {
+  width: 100%;
+}
+
+.footerDiv {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 100px 0px 0px 0px;
+  padding: 10px 0px 0px 0px;
+  border-color: #2990b6;
+  border-top-style: solid;
+}
+
+.footerDiv p {
+  padding: 10px 0px 0px 0px;
+}
+
+#scrollToTop {
+  color: white;
+  text-align: center;
+  text-decoration: underline;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0px 0px 5px 0px;
+}
+
+#scrollToTop:hover {
+  color: #2990b6;
+}
+/* ----- */
