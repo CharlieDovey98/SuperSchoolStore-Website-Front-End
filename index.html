@@ -31,7 +31,7 @@
                     <img src="Images/shoppingCart.png" alt="Checkout" class="shoppingCartPNG">
                     <span class="cartItems" v-if="currentPage !== 'checkout'">Checkout {{ itemsInTheCart }} </span>
                     <span class="cartItems" v-else>Back To Shopping </span>
-                  </div>
+                </div>
         </div>
         </header>
         <main>
@@ -82,7 +82,8 @@
                         Whether you’re starting fresh or advancing your career, S3 provides a supportive and
                         results-driven environment
                         where you can achieve your learning goals and set yourself up for future success.
-                        <br><br><a v-on:click="showShoppingPage(); scrollToTop()" id="shopAllLessons">Click Here to Shop all
+                        <br><br><a v-on:click="showShoppingPage(); scrollToTop()" id="shopAllLessons">Click Here to Shop
+                            all
                             lessons.</a>
                     </p>
                 </div>
@@ -215,10 +216,10 @@
                             <button v-on:click="removeFromCart(lessonIndex)">Remove</button>
                         </li>
                     </ul>
-                </div>
-                <div class="cartTotal">
-                    
-                    <p><strong>Cart Total:</strong> £{{ totalCartPrice }}</p>
+                    <div class="cartTotal">
+
+                        <p><strong>Cart Total:</strong> £{{ totalCartPrice }}</p>
+                    </div>
                 </div>
                 <div v-else>
                     <p>Your cart is empty. Please add lessons to your cart to continue with your purchase.</p>
@@ -229,50 +230,50 @@
                     <h3>Purchase Information</h3>
                     <label>
                         First Name:
-                        <input type="text" v-model="user.firstName" required/>
+                        <input type="text" v-model="user.firstName" required />
                     </label>
                     <label>
                         Surname:
-                        <input type="text" v-model="user.lastName" required/>
+                        <input type="text" v-model="user.lastName" required />
                     </label>
                     <label>
                         Email:
-                        <input type="email" v-model="user.email" required/>
+                        <input type="email" v-model="user.email" required />
                     </label>
                     <label>
                         Confirm Email:
-                        <input type="email" v-model="user.confirmEmail" required/>
+                        <input type="email" v-model="user.confirmEmail" required />
                     </label>
                     <label>
                         Phone Number:
-                        <input type="tel" v-model="user.phoneNumber" required/>
+                        <input type="tel" v-model="user.phoneNumber" required />
                     </label>
                     <label>
                         Password:
-                        <input type="password" v-model="user.password" required/>
+                        <input type="password" v-model="user.password" required />
                     </label>
                     <label>
                         Confirm Password:
-                        <input type="password" v-model="user.confirmPassword" required/>
+                        <input type="password" v-model="user.confirmPassword" required />
                     </label>
 
                     <h3>Payment Information</h3>
                     <label>
                         Card Number:
-                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####" required/>
+                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####" required />
                     </label>
                     <label>
                         Expiry Date:
-                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY" required/>
+                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY" required />
                     </label>
                     <label>
                         CVV:
-                        <input type="tel" v-model="payment.cvv" placeholder="###" required/>
+                        <input type="tel" v-model="payment.cvv" placeholder="###" required />
                     </label>
 
                     <!-- Below is the terms and conditions checkbox -->
                     <label>
-                        <input type="checkbox" v-model="user.termsAccepted"  required/>
+                        <input type="checkbox" v-model="user.termsAccepted" required />
                         I have read and agree to the Terms and Conditions
                     </label>
 
