@@ -1,6 +1,6 @@
 // JavaScript for the S3 Website using Vue.js
 
-const backendUrl = "http://superschoolstore.eu-west-2.elasticbeanstalk.com"; // The back end environment URL.
+const backendUrl = "https://superschoolstore.eu-west-2.elasticbeanstalk.com"; // The back end environment URL.
 
 let app = new Vue({
   el: "#App",
