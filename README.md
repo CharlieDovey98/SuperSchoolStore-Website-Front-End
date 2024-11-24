@@ -7,4 +7,4 @@ Github Back-End Repository Link: https://github.com/CharlieDovey98/SuperSchoolSt
 Github Front-End Repository Link: https://github.com/CharlieDovey98/SuperSchoolStore-Website-Front-End
 Website Images attained from: https://www.flaticon.com
 
-Front end hosted via GitHub Pages: https://github.com/CharlieDovey98/SuperSchoolStore-Website-Front-End/deployments/github-pages
+Front end hosted via GitHub Pages: https://charliedovey98.github.io/SuperSchoolStore-Website-Front-End/ , https://github.com/CharlieDovey98/SuperSchoolStore-Website-Front-End/deployments/github-pages (Ensure security check is accepted to enable the page will work)
