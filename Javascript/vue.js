@@ -228,12 +228,13 @@ let app = new Vue({
 
             // If the lesson is not in the lessonsPurchased array, add it.
             if (!found) {
-              lessonsPurchased.push({ id: cartItem.id, spacesPurchased: 1 });
+              lessonsPurchased.push({ lessonId: cartItem.id, spacesPurchased: 1 });
             }
           }
 
           // Prepare the purchase object, containing the user information and their lessons purchased, with the spaces purchased for each lesson.
           const purchaseObject = {
+            id: this.customerPurchases + 1,
             forename: this.user.forename,
             surname: this.user.surname,
             phoneNumber: this.user.phoneNumber,
@@ -260,6 +261,8 @@ let app = new Vue({
           console.log("Purchase response:", responseData);
 
           alert("Purchase complete, Thank you for shopping with S3!");
+
+          this.customerPurchases += 1; // Increment the local customerPurchases count to reflect the completed purchase.
 
           // Clear user checkout form inputs and cart.
           this.user = {
