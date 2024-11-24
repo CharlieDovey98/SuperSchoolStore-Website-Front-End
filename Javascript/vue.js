@@ -132,10 +132,15 @@ let app = new Vue({
       try {
         const sortAspect = this.selectedSortAspect;
         const sortOrder = this.sortOrder;
-        const response = await fetch(`${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`); // Fetch using a template string with embeded expressions `${}`.
+        const response = await fetch(
+          `${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`
+        ); // Fetch using a template string with embeded expressions `${}`.
         const data = await response.json();
         this.lessons = data;
-        console.log("Fetched custom filtered and sorted lessons:", this.lessons);
+        console.log(
+          "Fetched custom filtered and sorted lessons:",
+          this.lessons
+        );
       } catch (error) {
         console.error("Error fetching filtered and sorted lessons:", error);
       }
@@ -190,39 +195,49 @@ let app = new Vue({
 
     // A method to change the layout of the website to the 'checkout page'.
     showCheckoutPage() {
-      if (this.cart.length == 0) {
-        alert("Please add lessons to the cart before proceeding to checkout");
+      if (this.cart.length === 0) {
+        alert("Your cart is empty. Please add a lesson from the lessons page.");
+        this.currentPage = "shopping"; // Navigate back to the lessons page.
       } else if (this.cart.length > 0) {
         if (this.currentPage === "checkout") {
-          this.currentPage = "shopping";
+          this.currentPage = "shopping"; // Navigate back to the lessons page if already on checkout.
         } else {
-          this.currentPage = "checkout";
+          this.currentPage = "checkout"; // Navigate to the checkout page.
         }
       }
     },
 
-    // An async method to update a lesson field with a new value. 
+    // An async method to update a lesson field with a new value.
     async updateLessonField(lessonId, lessonField, operation, value) {
       try {
-        console.log(`Updating lessonId: ${lessonId}, field: ${lessonField}, operation: ${operation}, value: ${value}`);
-        const response = await fetch(`${backendUrl}/collections/lessons/${lessonId}/${lessonField}/${operation}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ value }), // Send the new value for the field.
-        });
-    
+        console.log(
+          `Updating lessonId: ${lessonId}, field: ${lessonField}, operation: ${operation}, value: ${value}`
+        );
+        const response = await fetch(
+          `${backendUrl}/collections/lessons/${lessonId}/${lessonField}/${operation}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ value }), // Send the new value for the field.
+          }
+        );
+
         if (!response.ok) {
-          console.error(`Failed to ${operation} ${lessonField}: ${response.statusText}`);
+          console.error(
+            `Failed to ${operation} ${lessonField}: ${response.statusText}`
+          );
           return;
         }
-    
+
         const data = await response.json();
-        console.log(`${operation} operation on ${lessonField} successful:`, data);
+        console.log(
+          `${operation} operation on ${lessonField} successful:`,
+          data
+        );
       } catch (error) {
         console.error("Error updating lesson field:", error);
       }
     },
-    
 
     // A method to confirm checkout and purchase lessons the user has in their cart. Confirmed with an alert.
     async submitCheckout() {
@@ -275,7 +290,10 @@ let app = new Vue({
 
           // Guard statement to check the response success allowing for further code to be executed or not.
           if (!response.ok) {
-            return
+            console.error(
+              `Failed to ${operation} ${lessonField}: ${response.statusText}`
+            );
+            return;
           }
 
           const responseData = await response.json();
@@ -285,8 +303,16 @@ let app = new Vue({
 
           // Update the lessons in the database for each purchased lesson.
           for (let lesson of lessonsPurchased) {
-            await this.updateLessonField(lesson.lessonId, "spacesAvailable", "decrement", lesson.spacesPurchased);
+            await this.updateLessonField(
+              lesson.lessonId,
+              "spacesAvailable",
+              "decrement",
+              lesson.spacesPurchased
+            );
           }
+
+          // Fetch lessons from the database to update local data.
+          await this.fetchLessons();
 
           this.customerPurchases += 1; // Increment the local customerPurchases count to reflect the completed purchase.
 
@@ -321,7 +347,8 @@ let app = new Vue({
     },
   },
 
-  watch: { // Watch methods react to changes in specific data properties and triggers logic or updates.
+  watch: {
+    // Watch methods react to changes in specific data properties and triggers logic or updates.
 
     // Watch for changes in selectedSortAspect or sortOrder to fetch updated lessons.
     selectedSortAspect() {
