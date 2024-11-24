@@ -14,8 +14,8 @@ let app = new Vue({
     customerPurchases: 0, //
     user: {
       // User information gathered through the checkout page.
-      firstName: "",
-      lastName: "",
+      forename: "",
+      surname: "",
       email: "",
       confirmEmail: "",
       phoneNumber: "",
@@ -31,7 +31,8 @@ let app = new Vue({
     },
   },
 
-  computed: { // Below are computed properties that automatically update when their dependent data changes.
+  computed: {
+    // Below are computed properties that automatically update when their dependent data changes.
 
     // A computed method to update the display at the top right of the website, showing the amount of items in the cart.
     itemsInTheCart: function () {
@@ -47,16 +48,21 @@ let app = new Vue({
     // A computed method to adjust all lessons dynamically based on the cart contents.
     updatedLessons() {
       const updatedLessonsArray = [];
-      for (let lesson of this.lessons) {// A for loop to loop through each lesson and check if its in the cart.
+      for (let lesson of this.lessons) {
+        // A for loop to loop through each lesson and check if its in the cart.
 
         let lessonInCartCount = 0;
-        for (let cartItem of this.cart) { // A for loop through all cart items, if a match between the id's is found, update the cartCount
+        for (let cartItem of this.cart) {
+          // A for loop through all cart items, if a match between the id's is found, update the cartCount
           if (cartItem.id === lesson.id) {
             lessonInCartCount++;
           }
         }
         // Copy the lesson using spread syntax (...lesson) and adjust spacesAvailable by matches found.
-        const adjustedLesson = { ...lesson, spacesAvailable: lesson.spacesAvailable - lessonInCartCount };
+        const adjustedLesson = {
+          ...lesson,
+          spacesAvailable: lesson.spacesAvailable - lessonInCartCount,
+        };
         updatedLessonsArray.push(adjustedLesson); // Push back the adjustedLesson and overwrite the original lesson object.
       }
       return updatedLessonsArray;
@@ -74,8 +80,8 @@ let app = new Vue({
     // A computed method to check whether a user can complete checkout.
     canCheckout() {
       return (
-        this.user.firstName &&
-        this.user.lastName &&
+        this.user.forname &&
+        this.user.surname &&
         this.user.phoneNumber &&
         this.user.email === this.user.confirmEmail &&
         this.user.password === this.user.confirmPassword &&
@@ -87,7 +93,8 @@ let app = new Vue({
     },
   },
 
-  methods: { // Below are reusable methods for API calls and event handling.
+  methods: {
+    // Below are reusable methods for API calls and event handling.
 
     // Async method to fetch the total number of customer purchases from the database, purchases collection.
     async fetchCustomerPurchasesAmount() {
@@ -97,7 +104,10 @@ let app = new Vue({
         this.customerPurchases = data.length;
         console.log("Fetched purchases amount:", this.customerPurchases);
       } catch (error) {
-        console.error("Error fetching customer purchases from the Database:", error);
+        console.error(
+          "Error fetching customer purchases from the Database:",
+          error
+        );
       }
     },
 
@@ -118,10 +128,15 @@ let app = new Vue({
       try {
         const sortAspect = this.selectedSortAspect;
         const sortOrder = this.sortOrder;
-        const response = await fetch(`${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`); // Fetch using a template string with embeded expressions `${}`.
+        const response = await fetch(
+          `${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`
+        ); // Fetch using a template string with embeded expressions `${}`.
         const data = await response.json();
         this.lessons = data;
-        console.log("Fetched custom filtered and sorted lessons:", this.lessons);
+        console.log(
+          "Fetched custom filtered and sorted lessons:",
+          this.lessons
+        );
       } catch (error) {
         console.error("Error fetching filtered and sorted lessons:", error);
       }
@@ -188,29 +203,83 @@ let app = new Vue({
     },
 
     // A method to confirm checkout and purchase lessons the user has in their cart. Confirmed with an alert.
-    submitCheckout() {
+    async submitCheckout() {
       if (this.canCheckout) {
-        alert("Purchase complete, Thank you for shopping with S3!");
+        try {
+          const lessonsPurchased = []; // Create an empty array to store the lessons purchased by the user.
 
-        // Clear all user inputs in the checkout page.
-        this.user = {
-          firstName: "",
-          lastName: "",
-          email: "",
-          confirmEmail: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
-          termsAccepted: false,
-        };
-        this.payment = {
-          cardNumber: "",
-          expiryDate: "",
-          cvv: "",
-        };
+          // A for loop to add lessons to the lessonsPurchased array.
+          for (let i = 0; i < this.cart.length; i++) {
+            const cartItem = this.cart[i];
+            let found = false;
 
-        // Clear the cart of purchased items.
-        this.cart = [];
+            // A for loop to check if the lesson is already in the lessonsPurchased array.
+            for (let j = 0; j < lessonsPurchased.length; j++) {
+              if (lessonsPurchased[j].id === cartItem.id) {
+                lessonsPurchased[j].spacesPurchased += 1; // Increment the amount of spaces purchased if the lesson is already in the lessonsPurchased array.
+                found = true;
+                break;
+              }
+            }
+
+            // If the lesson is not in the lessonsPurchased array, add it.
+            if (!found) {
+              lessonsPurchased.push({ id: cartItem.id, spacesPurchased: 1 });
+            }
+          }
+
+          // Prepare the purchase object, containing the user information and their lessons purchased, with the spaces purchased for each lesson.
+          const purchaseObject = {
+            forename: this.user.forename,
+            surname: this.user.surname,
+            phoneNumber: this.user.phoneNumber,
+            email: this.user.email,
+            cardNumber: this.payment.cardNumber,
+            expiryDate: this.payment.expiryDate,
+            cvv: this.payment.cvv,
+            lessons: lessonsPurchased,
+          };
+
+          // fetch request to add the created purchase to the purchases collection.
+          const response = await fetch(`${backendUrl}/collections/purchases`, {
+            method: "POST", // Set the method header as POST.
+            headers: { "Content-Type": "application/json" }, // Set the data type to JSON data.
+            body: JSON.stringify(purchaseObject), // Stringify the body purchaseObject data.
+          });
+
+          // Guard statement to check the response success allowing for further code to be executed or not.
+          if (!response.ok) {
+            throw new Error("Failed to complete purchase");
+          }
+
+          const responseData = await response.json();
+          console.log("Purchase response:", responseData);
+
+          alert("Purchase complete, Thank you for shopping with S3!");
+
+          // Clear user checkout form inputs and cart.
+          this.user = {
+            forename: "",
+            surname: "",
+            email: "",
+            confirmEmail: "",
+            phoneNumber: "",
+            password: "",
+            confirmPassword: "",
+            termsAccepted: false,
+          };
+          this.payment = {
+            cardNumber: "",
+            expiryDate: "",
+            cvv: "",
+          };
+          this.cart = [];
+        } catch (error) {
+          console.error("Error during checkout:", error);
+          alert(
+            "There was an error processing your checkout. Please try again."
+          );
+        }
       } else {
         alert(
           "Please fill out all required fields correctly and accept the Terms and Conditions."
@@ -218,7 +287,9 @@ let app = new Vue({
       }
     },
   },
-  watch: { // Watch methods react to changes in specific data properties and triggers logic or updates.
+
+  watch: {
+    // Watch methods react to changes in specific data properties and triggers logic or updates.
 
     // Watch for changes in selectedSortAspect or sortOrder to fetch updated lessons.
     selectedSortAspect() {
@@ -233,7 +304,8 @@ let app = new Vue({
     },
   },
 
-  created() { // Created method which is triggered after the instance is created and initialises data collection from the database.
+  created() {
+    // Created method which is triggered after the instance is created and initialises data collection from the database.
     this.fetchLessons(); // Call fetchLessons() method when the Vue instance is created.
     this.fetchCustomerPurchasesAmount();
     setInterval(this.fetchCustomerPurchasesAmount, 60000); // Set an interval time limit of 1 minute before calling the method.
