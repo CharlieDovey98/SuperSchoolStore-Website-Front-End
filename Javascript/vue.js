@@ -79,8 +79,8 @@ let app = new Vue({
 
     // A computed method to check whether a user can complete checkout.
     canCheckout() {
-      return (
-        this.user.forename && // 
+      if (
+        this.user.forename &&
         this.user.surname &&
         this.user.phoneNumber &&
         this.user.email === this.user.confirmEmail &&
@@ -89,7 +89,11 @@ let app = new Vue({
         this.payment.cardNumber &&
         this.payment.expiryDate &&
         this.payment.cvv
-      );
+      ) {
+        return true; // Return true is all conditions are met.
+      } else {
+        return false; // Return false if one or more condition is not met.
+      }
     },
   },
 
