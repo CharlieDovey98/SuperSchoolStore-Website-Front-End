@@ -80,7 +80,7 @@ let app = new Vue({
     // A computed method to check whether a user can complete checkout.
     canCheckout() {
       return (
-        this.user.forname &&
+        this.user.forename && // 
         this.user.surname &&
         this.user.phoneNumber &&
         this.user.email === this.user.confirmEmail &&
