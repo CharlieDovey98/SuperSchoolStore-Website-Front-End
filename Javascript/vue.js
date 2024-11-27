@@ -132,9 +132,7 @@ let app = new Vue({
       try {
         const sortAspect = this.selectedSortAspect;
         const sortOrder = this.sortOrder;
-        const response = await fetch(
-          `${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`
-        ); // Fetch using a template string with embeded expressions `${}`.
+        const response = await fetch(`${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`); // Fetch using a template string with embeded expressions `${}`.
         const data = await response.json();
         this.lessons = data;
         console.log(
@@ -213,9 +211,7 @@ let app = new Vue({
         console.log(
           `Updating lessonId: ${lessonId}, field: ${lessonField}, operation: ${operation}, value: ${value}`
         );
-        const response = await fetch(
-          `${backendUrl}/collections/lessons/${lessonId}/${lessonField}/${operation}`,
-          {
+        const response = await fetch(`${backendUrl}/collections/lessons/${lessonId}/${lessonField}/${operation}`,{
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ value }), // Send the new value for the field.
@@ -223,9 +219,7 @@ let app = new Vue({
         );
 
         if (!response.ok) {
-          console.error(
-            `Failed to ${operation} ${lessonField}: ${response.statusText}`
-          );
+          console.error(`Failed to ${operation} ${lessonField}: ${response.statusText}`);
           return;
         }
 
