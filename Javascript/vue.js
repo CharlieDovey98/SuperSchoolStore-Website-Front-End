@@ -1,7 +1,7 @@
 // JavaScript for the S3 Website using Vue.js
 
 const backendUrl = "https://superschoolstore.eu-west-2.elasticbeanstalk.com"; // The back end environment URL.
-
+//const backendUrl = "http://127.0.0.1:3000"; // The testing environment URL.
 let app = new Vue({
   el: "#App",
   data: {
@@ -129,6 +129,13 @@ let app = new Vue({
         console.log("Fetched lessons:", this.lessons);
       } catch (error) {
         console.error("Error fetching lessons from the Database:", error);
+      }
+    },
+
+    // A method to trigger fetch, only when both selectedSortAspect and sortOrder are selected.
+    triggerFetch() {
+      if (this.selectedSortAspect && this.sortOrder) {
+        this.fetchFilteredAndSortedLessons();
       }
     },
 
@@ -352,12 +359,12 @@ let app = new Vue({
     // Watch for changes in selectedSortAspect or sortOrder to fetch updated lessons.
     selectedSortAspect() {
       if (this.selectedSortAspect) {
-        this.fetchFilteredAndSortedLessons();
+        this.triggerFetch();
       }
     },
     sortOrder() {
       if (this.sortOrder) {
-        this.fetchFilteredAndSortedLessons();
+        this.triggerFetch();
       }
     },
   },
