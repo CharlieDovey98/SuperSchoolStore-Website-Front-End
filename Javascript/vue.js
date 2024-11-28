@@ -102,8 +102,7 @@ let app = new Vue({
 
     // A method for attaining the images full url, to then display it on the website.
     getFullImageUrl(imagePath) {
-      const serverUrl = "https://superschoolstore.eu-west-2.elasticbeanstalk.com/";
-      return serverUrl + imagePath;
+      return `https://superschoolstore.eu-west-2.elasticbeanstalk.com/${imagePath}`;
     },
 
     // An async method to fetch the total number of customer purchases from the database, purchases collection.

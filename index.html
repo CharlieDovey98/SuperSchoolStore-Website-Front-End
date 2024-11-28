@@ -19,16 +19,16 @@
         <div id="headerContainer">
             <header class="indexPageHeader">
                 <div class="homeDiv" v-on:click="showAboutUs">
-                    <img src="getFullImageUrl(images/education.png)" alt="Logo" class="s3Logo">
+                    <img v-bind:src="getFullImageUrl('images/education.png')" alt="Logo" class="s3Logo">
                     <p>S3</p>
                 </div>
                 <h1>SuperSchoolStore</h1>
                 <div class="shoppingDiv" v-on:click="showShoppingPage">
-                    <img src="getFullImageUrl(images/certificate.png)" alt="Go To Shop" class="shopLessonsPNG">
+                    <img v-bind:src="getFullImageUrl('images/certificate.png')" alt="Go To Shop" class="shopLessonsPNG">
                     <p>Go Shopping</p>
                 </div>
                 <div class="checkoutDiv" v-on:click="showCheckoutPage">
-                    <img src="getFullImageUrl(images/shoppingCart.png)" alt="Checkout" class="shoppingCartPNG">
+                    <img v-bind:src="getFullImageUrl('images/shoppingCart.png')" alt="Checkout" class="shoppingCartPNG">
                     <span class="cartItems" v-if="currentPage !== 'checkout'">Checkout {{ itemsInTheCart }} </span>
                     <span class="cartItems" v-else>Back To Shopping </span>
                 </div>
