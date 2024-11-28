@@ -101,7 +101,7 @@ let app = new Vue({
     // Below are reusable methods for API calls and event handling.
 
     // A method for attaining the images full url, to then display it on the website.
-    getFullImageUrl(imagePath) {// Method to correct the URL to display the image from the server
+    getFullImageUrl(imagePath) {
       const serverUrl = "https://superschoolstore.eu-west-2.elasticbeanstalk.com/";
       return serverUrl + imagePath;
     },
