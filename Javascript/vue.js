@@ -1,7 +1,7 @@
 // JavaScript for the S3 Website using Vue.js
 
-const backendUrl = "https://superschoolstore.eu-west-2.elasticbeanstalk.com"; // The back end environment URL.
-//const backendUrl = "http://127.0.0.1:3000"; // The testing environment URL.
+//const backendUrl = "https://superschoolstore.eu-west-2.elasticbeanstalk.com"; // The back end environment URL.
+const backendUrl = "http://127.0.0.1:3000"; // The testing environment URL.
 let app = new Vue({
   el: "#App",
   data: {
@@ -29,6 +29,18 @@ let app = new Vue({
       expiryDate: "",
       cvv: "",
     },
+    validations: {
+      isForenameValid: true,
+      isSurnameValid: true,
+      isPhoneNumberValid: true,
+      isEmailValid : true,
+      isEmailConfirmationValid: true,
+      isPasswordValid: true,
+      isPasswordConfirmationValid: true,
+      isCardNumberValid: true,
+      isExpiryDateValid: true,
+      isCvvValid: true,
+  },
   },
 
   computed: {
@@ -59,10 +71,7 @@ let app = new Vue({
           }
         }
         // Copy the lesson using spread syntax (...lesson) and adjust spacesAvailable by matches found.
-        const adjustedLesson = {
-          ...lesson,
-          spacesAvailable: lesson.spacesAvailable - lessonInCartCount,
-        };
+        const adjustedLesson = {...lesson, spacesAvailable: lesson.spacesAvailable - lessonInCartCount,};
         updatedLessonsArray.push(adjustedLesson); // Push back the adjustedLesson and overwrite the original lesson object.
       }
       return updatedLessonsArray;
@@ -74,7 +83,7 @@ let app = new Vue({
       for (let lesson of this.cart) {
         cartTotal += lesson.price;
       }
-      return cartTotal.toFixed(2); // The total is rounded to 2 decimal places using toFixed(2).
+      return Number(cartTotal.toFixed(2)); // The total is rounded to 2 decimal places using toFixed(2).
     },
 
     // A computed method to check whether a user can complete checkout.
@@ -83,12 +92,15 @@ let app = new Vue({
         this.user.forename &&
         this.user.surname &&
         this.user.phoneNumber &&
-        this.user.email === this.user.confirmEmail &&
-        this.user.password === this.user.confirmPassword &&
-        this.user.termsAccepted &&
-        this.payment.cardNumber &&
-        this.payment.expiryDate &&
-        this.payment.cvv
+        this.validations.isForenameValid &&
+        this.validations.isSurnameValid &&
+        this.validations.isPhoneNumberValid
+        //this.user.email === this.user.confirmEmail &&
+        //this.user.password === this.user.confirmPassword &&       
+        //this.user.termsAccepted &&                                // Additional verification and checks.
+        //this.payment.cardNumber &&                                // These options are disabled to meet course requirements.
+        //this.payment.expiryDate &&
+        //this.payment.cvv
       ) {
         return true; // Return true is all conditions are met.
       } else {
@@ -245,6 +257,47 @@ let app = new Vue({
       }
     },
 
+    // Below are the checkout validation methods, using regular expressions.
+    validateForename() {
+      const regex = /^[a-zA-Z\s'-]{2,}$/; // Regex allowing lowercase, and uppercase letters, spaces, apostrophe, and hyphens, with a minimum length of 2.
+      this.validations.isForenameValid = regex.test(this.user.forename); // test the users input against the regex, evaluating to true or false.
+    },
+    validateSurname() {
+      const regex = /^[a-zA-Z\s'-]{2,}$/; // Regex allowing lowercase, and uppercase letters, spaces, apostrophe, and hyphens, with a minimum length of 2.
+      this.validations.isSurnameValid = regex.test(this.user.surname);
+    },
+    validatePhoneNumber() {
+      const regex = /^[\d\s+-]{10,14}$/; // Regex allowing digits, spaces, plus sign, and hyphens, with a length between 10-14.
+      this.validations.isPhoneNumberValid = regex.test(this.user.phoneNumber);
+    },
+    validateEmail() {
+      const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Regex allowing a valid email format e.g. name@hotmail.co.uk .
+      this.validations.isEmailValid = regex.test(this.user.email);
+    },
+    validateEmailConfirmation() {
+      this.validations.isEmailConfirmationValid = this.user.email === this.user.confirmEmail; // Confirms the email matches the first email input.
+    },
+    validatePassword() {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!?<>£$€%^&*#@])[A-Za-z\d!?<>£$€%^&*#@]{8,}$/; 
+      // Regex allowing one lowercase letter, one uppercase letter, one digit, and one special character with a length of at least 8 characters.
+      this.validations.isPasswordValid = regex.test(this.user.password);
+    },
+    validatePasswordConfirmation() {
+      this.validations.isPasswordConfirmationValid = this.user.password === this.user.confirmPassword; // Confirms the password matches the first password input.
+    },
+    validateCardNumber() {
+      const regex = /^[\d]{16}$/; // Regex allowing a length of exactly 16 digits.
+      this.validations.isCardNumberValid = regex.test(this.payment.cardNumber);
+    },
+    validateCardExpiryDate() {
+      const regex = /^(0[1-9]|1[0-2])\d{2}$/; // Regex allowing the MMYY format, MM is 01-12, followed by 2 digits for the year.
+      this.validations.isExpiryDateValid = regex.test(this.payment.expiryDate);
+    },
+    validateCardCvv() {
+      const regex = /^[\d]{3}$/; // Regex allowing for a length of exactly three digits.
+      this.validations.isCvvValid = regex.test(this.payment.cvv);
+    },
+
     // A method to confirm checkout and purchase lessons the user has in their cart. Confirmed with an alert.
     async submitCheckout() {
       if (this.canCheckout) {
@@ -281,6 +334,7 @@ let app = new Vue({
             surname: this.user.surname,
             phoneNumber: this.user.phoneNumber,
             email: this.user.email,
+            purchaseTotal: this.totalCartPrice,
             cardNumber: this.payment.cardNumber,
             expiryDate: this.payment.expiryDate,
             cvv: this.payment.cvv,

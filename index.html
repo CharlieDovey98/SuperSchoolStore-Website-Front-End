@@ -230,50 +230,80 @@
                     <h3>Purchase Information</h3>
                     <label>
                         Forename:
-                        <input type="text" v-model="user.forename" required />
+                        <span v-if="!validations.isForenameValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Forename must be at least 2 characters and can contain letters, spaces, ' - .
+                        </span>
+                        <input type="text" v-model="user.forename"  v-on:input="validateForename" required />
                     </label>
                     <label>
                         Surname:
-                        <input type="text" v-model="user.surname" required />
+                        <span v-if="!validations.isSurnameValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Surname must be at least 2 characters and can contain letters, spaces, ' - .
+                        </span>
+                        <input type="text" v-model="user.surname" v-on:input="validateSurname" required />
                     </label>
                     <label>
                         Email:
-                        <input type="email" v-model="user.email" required />
+                        <span v-if="!validations.isEmailValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Email must be a valid format, e.g., name@hotmail.com
+                          </span>
+                        <input type="email" v-model="user.email" v-on:input="validateEmail"/>
                     </label>
                     <label>
                         Confirm Email:
-                        <input type="email" v-model="user.confirmEmail" required />
+                        <span v-if="user.email !== user.confirmEmail" class="error">
+                            &nbsp;&nbsp;&nbsp;Emails must match.
+                          </span>
+                        <input type="email" v-model="user.confirmEmail" v-on:input="validateEmailConfirmation" />
                     </label>
                     <label>
                         Phone Number:
-                        <input type="tel" v-model="user.phoneNumber" required />
+                        <span v-if="!validations.isPhoneNumberValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Phone number must be between 10-14 digits long, and can include spaces, +, or -.
+                        </span>
+                        <input type="tel" v-model="user.phoneNumber" v-on:input="validatePhoneNumber" required />
                     </label>
                     <label>
                         Password:
-                        <input type="password" v-model="user.password" required />
+                        <span v-if="!validations.isPasswordValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character (!?<>£$€%^&*#@).
+                          </span>
+                        <input type="password" v-model="user.password"  v-on:input="validatePassword"/>
                     </label>
                     <label>
                         Confirm Password:
-                        <input type="password" v-model="user.confirmPassword" required />
+                        <span v-if="user.password !== user.confirmPassword" class="error">
+                            &nbsp;&nbsp;&nbsp;Passwords must match.
+                          </span>
+                        <input type="password" v-model="user.confirmPassword" v-on:input="validatePasswordConfirmation"/>
                     </label>
 
                     <h3>Payment Information</h3>
                     <label>
                         Card Number:
-                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####" required />
+                        <span v-if="!validations.isCardNumberValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Card number must be exactly 16 digits.
+                          </span>
+                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####" v-on:input="validateCardNumber" />
                     </label>
                     <label>
                         Expiry Date:
-                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY" required />
+                        <span v-if="!validations.isExpiryDateValid" class="error">
+                            &nbsp;&nbsp;&nbsp;Expiry date must be in MMYY format, and only 4 digits.
+                          </span>
+                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY" v-on:input="validateCardExpiryDate" />
                     </label>
                     <label>
                         CVV:
-                        <input type="tel" v-model="payment.cvv" placeholder="###" required />
+                        <span v-if="!validations.isCvvValid" class="error">
+                            &nbsp;&nbsp;&nbsp;CVV must be exactly 3 digits.
+                          </span>
+                        <input type="tel" v-model="payment.cvv" placeholder="###" v-on:input="validateCardCvv" />
                     </label>
 
                     <!-- Below is the terms and conditions checkbox -->
                     <label>
-                        <input type="checkbox" v-model="user.termsAccepted" required />
+                        <input type="checkbox" v-model="user.termsAccepted" />
                         I have read and agree to the Terms and Conditions
                     </label>
 

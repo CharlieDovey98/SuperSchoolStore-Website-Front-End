@@ -485,6 +485,11 @@ form input[type="checkbox"] {
   margin-right: 5px;
 }
 
+form .error{
+  color: red;
+  font-size: 0.9em;
+}
+
 form h3 {
   font-size: 1.2em;
   color: #26586a;
