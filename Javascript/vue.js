@@ -160,6 +160,7 @@ let app = new Vue({
       try {
         const sortAspect = this.selectedSortAspect;
         const sortOrder = this.sortOrder;
+        this.searchQuery = "";
         const response = await fetch(`${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`); // Fetch using a template string with embeded expressions `${}`.
         const data = await response.json();
         this.lessons = data;
@@ -189,6 +190,8 @@ let app = new Vue({
     // A debounced async keywordSearch method used to keyword search the elements of the database's Lessons collection. 
     keywordSearch: async function () {
       try {
+        this.selectedSortAspect = "";
+        this.sortOrder = "";
         // Guard statement to reset results if the search query is empty.
         if (!this.searchQuery.trim()) {
           this.searchResults = [];
@@ -196,7 +199,7 @@ let app = new Vue({
           return;
         }
         // Fetch search results from the backend.
-        const response = await fetch(`${backendUrl}/search?query=${this.searchQuery}`);
+        const response = await fetch(`${backendUrl}/search/${this.searchQuery}`);
     
         // If search has completed without error, store the search results
         const results = await response.json();
@@ -467,6 +470,6 @@ let app = new Vue({
     this.fetchLessons(); // Call fetchLessons() method when the Vue instance is created.
     this.fetchCustomerPurchasesAmount();
     setInterval(this.fetchCustomerPurchasesAmount, 60000); // Set an interval time limit of 1 minute before calling the method.
-    this.debouncedSearch = this.debounce(this.keywordSearch, 500); // Convert keywordSearch() method into a debounced method with a timer set to 500ms.
+    this.debouncedKeywordSearch = this.debounce(this.keywordSearch, 500); // Convert keywordSearch() method into a debounced method with a timer set to 500ms.
   },
 });
