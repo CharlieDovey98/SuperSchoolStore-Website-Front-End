@@ -259,7 +259,7 @@ main {
   font-size: 0.7em;
   border-bottom: 1px solid #2990b6;
   padding-bottom: 2vh;
-  margin-bottom: 5vh;
+  margin-bottom: 2vh;
   text-align: center;
 }
 
@@ -304,9 +304,29 @@ main {
   box-sizing: border-box;
 }
 
+.keyword-search-info {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.keywordSearchQueryHighlighting {
+  background-color: #a7ddf0; 
+  font-weight: bold;       
+}
+
 .lessons-sort-checkbox {
   margin-right: 5px;
   cursor: pointer;
+}
+
+.clear{
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+  margin: 10px 0 10px 0;
+  font-size: 1em;
+  font-weight: bold;
+  color: #b92444;
 }
 
 /* Lesson Styling */

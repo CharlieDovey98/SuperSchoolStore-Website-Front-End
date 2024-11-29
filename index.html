@@ -87,7 +87,6 @@
                             lessons.</a>
                     </p>
                 </div>
-
                 <div class="lessonCategories">
                     <h2>Lesson Categories Available To Purchase</h2>
                     <ul>
@@ -102,7 +101,6 @@
                         <li><strong>Geography: </strong>World Geography, World Politics, Environmental Geography</li>
                     </ul>
                 </div>
-
                 <div class="whyChooseUs">
                     <h2>Why Choose Us?</h2>
                     <p>At S3, we are committed to providing quality education that is accessible and affordable. Our
@@ -115,12 +113,12 @@
                 <h2>Available S3 Lessons, Start Your Learning Here:</h2>
 
                 <div class="filter-by-div">
-                    <!-- Below is the keyword search, section of the lessons webpage. -->
+                    <!-- Below is the keyword search of the lessons, within the shopping section. -->
                     <div>
                         <input class="keyword-search" type="text" v-model="searchQuery"
-                            placeholder=" Search For lessons..." />
+                            placeholder=" Search For lessons..." v-on:input="debouncedSearch" />
                     </div>
-                    <!-- Below of the checkbox, filtering section of lessons webpage. -->
+                    <!-- Below is the filtering and sorting of lessons, within the shopping section. -->
                     <div class="lesson-filters-containment-div">
                         <div class="inner-filters-div">
                             <label class="filter-by-label">
@@ -161,19 +159,62 @@
                                     value="descending" v-model="sortOrder" />
                                 Descending
                             </label>
-                            <label class="filter-by-label">
-                                <input class="lessons-sort-checkbox" type="radio" name="display-option"
-                                    v-on:change="resetFilters" />
-                                No filters
-                            </label>
+                            <!-- A button to clear the keyword searching input and filtering checkboxes -->
+                            <button class="addButton" type="radio" name="display-option" v-on:click="resetFilters">
+                                Clear search & Remove filters</button>
                         </div>
-
                     </div>
-
                 </div>
-                <p class="filter-information-prompt">Please refine your search through the filters and keyword searching
+                <p class="filter-information-prompt">Please refine your search through the filters or keyword searching
                     above.</p>
-                <div class="lesson" v-for="lesson in updatedLessons" :key="lesson.id">
+                <!-- Below is the search results of the keyword search, within the shopping section. -->
+                <div v-if="isSearchActive">
+                    <h3 class="keyword-search-info">Search Results:</h3>
+                    <ul v-if="searchResults.length > 0">
+                        <li v-for="lesson in searchResults" :key="lesson.id" class="lesson">
+                            <figure>
+                                <img v-bind:src="getFullImageUrl(lesson.image)" class="lesson-image"
+                                    :alt="lesson.title" />
+                            </figure>
+                            <div class="lesson-info">
+                                <h3 v-html="highlightText(lesson.title, searchQuery)"></h3>
+                                <p v-html="highlightText(`${lesson.description}`, searchQuery)"></p>
+                                <p v-html="highlightText(`<strong>Subject: </strong>${lesson.subject}`, searchQuery)">
+                                </p>
+                                <p v-html="highlightText(`<strong>Location: </strong>${lesson.location}`, searchQuery)">
+                                </p>
+                                <p v-html="highlightText(`<strong>Price: £</strong>${lesson.price}`, searchQuery)"></p>
+                                <p>
+                                    <strong>Spaces Available:</strong>
+                                    <span v-if="lesson.spacesAvailable === 0">No spaces left</span>
+                                    <span v-else-if="lesson.spacesAvailable <= 1">
+                                        Hurry, only {{ lesson.spacesAvailable }} space left!
+                                    </span>
+                                    <span v-else-if="lesson.spacesAvailable <= 3">
+                                        Hurry, only {{ lesson.spacesAvailable }} spaces left!
+                                    </span>
+                                    <span v-else>{{ lesson.spacesAvailable }} spaces available</span>
+                                </p>
+                                <p
+                                    v-html="highlightText(`<strong>Length:</strong> ${ lesson.courseLength } months`, searchQuery)">
+                                </p>
+                                <p v-html="highlightText(`<strong>Rating: </strong>${lesson.rating}`, searchQuery)"></p>
+
+                            </div>
+                            <div class="lesson-add-button-div">
+                                <button id="addLessonToCartButton" class="addButton" v-on:click="addToCart(lesson)"
+                                    :disabled="lesson.spacesAvailable <= 0">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                    <div v-else-if="!foundResults" class="keyword-search-info">
+                        <p>No results found for "{{ searchQuery }}"</p>
+                    </div>
+                </div>
+                <!-- Below is the fetched lessons with filtering and sorting -->
+                <div v-else class="lesson" v-for="lesson in updatedLessons" :key="lesson.id">
                     <figure>
                         <img v-bind:src="getFullImageUrl(lesson.image)" class="lesson-image" :alt="lesson.title">
                     </figure>
@@ -193,15 +234,15 @@
                             <span v-else>{{ lesson.spacesAvailable }} spaces available</span>
                         </p>
                         <p><strong>Length:</strong> {{ lesson.courseLength }} months</p>
+                        <p><strong>Rating:</strong> {{ lesson.rating }} Star</p>
                     </div>
                     <div class="lesson-add-button-div">
                         <button id="addLessonToCartButton" class="addButton" v-on:click="addToCart(lesson)"
                             :disabled="lesson.spacesAvailable <= 0">Add to Cart</button>
                     </div>
                 </div>
-
             </section>
-            <!-- Below is the checkout 'page' and lesson purchasing aspect of the website-->
+            <!-- Below is the checkout 'page' and lesson purchasing aspect of the website. -->
             <section id="checkoutPage" v-show="currentPage === 'checkout'">
                 <h2>Checkout</h2>
                 <div v-if="cart.length">
@@ -209,7 +250,8 @@
                         <li v-for="(lesson, lessonIndex) in cart" :key="lesson.id">
                             <div class="lessons-in-cart">
                                 <figure>
-                                    <img v-bind:src="getFullImageUrl(lesson.image)" class="lessonImageInCart" :alt="lesson.title">
+                                    <img v-bind:src="getFullImageUrl(lesson.image)" class="lessonImageInCart"
+                                        :alt="lesson.title">
                                 </figure>
                                 {{ lesson.title }} at {{lesson.location}} £{{ lesson.price.toFixed(2) }}
                             </div>
@@ -233,12 +275,13 @@
                         <span v-if="!validations.isForenameValid" class="error">
                             &nbsp;&nbsp;&nbsp;Forename must be at least 2 characters and can contain letters, spaces, ' - .
                         </span>
-                        <input type="text" v-model="user.forename"  v-on:input="validateForename" required />
+                        <input type="text" v-model="user.forename" v-on:input="validateForename" required />
                     </label>
                     <label>
                         Surname:
                         <span v-if="!validations.isSurnameValid" class="error">
-                            &nbsp;&nbsp;&nbsp;Surname must be at least 2 characters and can contain letters, spaces, ' - .
+                            &nbsp;&nbsp;&nbsp;Surname must be at least 2 characters and can contain letters, spaces, ' -
+                            .
                         </span>
                         <input type="text" v-model="user.surname" v-on:input="validateSurname" required />
                     </label>
@@ -246,36 +289,38 @@
                         Email:
                         <span v-if="!validations.isEmailValid" class="error">
                             &nbsp;&nbsp;&nbsp;Email must be a valid format, e.g., name@hotmail.com
-                          </span>
-                        <input type="email" v-model="user.email" v-on:input="validateEmail"/>
+                        </span>
+                        <input type="email" v-model="user.email" v-on:input="validateEmail" />
                     </label>
                     <label>
                         Confirm Email:
                         <span v-if="user.email !== user.confirmEmail" class="error">
                             &nbsp;&nbsp;&nbsp;Emails must match.
-                          </span>
+                        </span>
                         <input type="email" v-model="user.confirmEmail" v-on:input="validateEmailConfirmation" />
                     </label>
                     <label>
                         Phone Number:
                         <span v-if="!validations.isPhoneNumberValid" class="error">
-                            &nbsp;&nbsp;&nbsp;Phone number must be between 10-14 digits long, and can include spaces, +, or -.
+                            &nbsp;&nbsp;&nbsp;Phone number must be 10-14 digits long, and can include spaces, +, or -.
                         </span>
                         <input type="tel" v-model="user.phoneNumber" v-on:input="validatePhoneNumber" required />
                     </label>
                     <label>
                         Password:
                         <span v-if="!validations.isPasswordValid" class="error">
-                            &nbsp;&nbsp;&nbsp;Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character (!?<>£$€%^&*#@).
-                          </span>
-                        <input type="password" v-model="user.password"  v-on:input="validatePassword"/>
+                            &nbsp;&nbsp;&nbsp;Password must be at least 8 characters, include uppercase, lowercase, a
+                            number, and a special character (!?<>£$€%^&*#@).
+                        </span>
+                        <input type="password" v-model="user.password" v-on:input="validatePassword" />
                     </label>
                     <label>
                         Confirm Password:
                         <span v-if="user.password !== user.confirmPassword" class="error">
                             &nbsp;&nbsp;&nbsp;Passwords must match.
-                          </span>
-                        <input type="password" v-model="user.confirmPassword" v-on:input="validatePasswordConfirmation"/>
+                        </span>
+                        <input type="password" v-model="user.confirmPassword"
+                            v-on:input="validatePasswordConfirmation" />
                     </label>
 
                     <h3>Payment Information</h3>
@@ -283,21 +328,23 @@
                         Card Number:
                         <span v-if="!validations.isCardNumberValid" class="error">
                             &nbsp;&nbsp;&nbsp;Card number must be exactly 16 digits.
-                          </span>
-                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####" v-on:input="validateCardNumber" />
+                        </span>
+                        <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####"
+                            v-on:input="validateCardNumber" />
                     </label>
                     <label>
                         Expiry Date:
                         <span v-if="!validations.isExpiryDateValid" class="error">
                             &nbsp;&nbsp;&nbsp;Expiry date must be in MMYY format, and only 4 digits.
-                          </span>
-                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY" v-on:input="validateCardExpiryDate" />
+                        </span>
+                        <input type="tel" v-model="payment.expiryDate" placeholder="MMYY"
+                            v-on:input="validateCardExpiryDate" />
                     </label>
                     <label>
                         CVV:
                         <span v-if="!validations.isCvvValid" class="error">
                             &nbsp;&nbsp;&nbsp;CVV must be exactly 3 digits.
-                          </span>
+                        </span>
                         <input type="tel" v-model="payment.cvv" placeholder="###" v-on:input="validateCardCvv" />
                     </label>
 

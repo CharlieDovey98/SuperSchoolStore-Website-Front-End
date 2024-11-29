@@ -7,7 +7,9 @@ let app = new Vue({
   data: {
     currentPage: "aboutUs", // currentPage sets the landing page to be presented on website interaction and allows tracking of the current page.
     lessons: [], // Procucts is inicialised empty and will attain the lessons from mongoDB database lessons collection.
-    searchQuery: "", // A string for keyword searching.
+    searchQuery: "", // A string for keyword searching through the lessons in the database.
+    searchResults: [], // Results from the backend after a keyword search through the database.
+    foundResults: true, // A boolean to indicate the state of the keyword search.
     selectedSortAspect: "", // Selected key for sorting (location, price, courseLength, spacesAvailable, subject).
     sortOrder: "", // Ascending, descending or no sorting order.
     cart: [], // Cart is inicialised to empty and will update when the user adds lessons to their cart or removes them.
@@ -23,8 +25,8 @@ let app = new Vue({
       confirmPassword: "",
       termsAccepted: false,
     },
-    // Payment information gathered through the checkout page.
     payment: {
+      // Payment information gathered through the checkout page.
       cardNumber: "",
       expiryDate: "",
       cvv: "",
@@ -107,6 +109,11 @@ let app = new Vue({
         return false; // Return false if one or more condition is not met.
       }
     },
+
+    // A computed property to determine if the keyword search is active.
+    isSearchActive() {
+      return this.searchQuery.trim().length > 0;
+    },
   },
 
   methods: {
@@ -125,10 +132,7 @@ let app = new Vue({
         this.customerPurchases = data.length;
         console.log("Fetched purchases amount:", this.customerPurchases);
       } catch (error) {
-        console.error(
-          "Error fetching customer purchases from the Database:",
-          error
-        );
+        console.error("Error fetching customer purchases from the Database:", error);
       }
     },
 
@@ -159,10 +163,7 @@ let app = new Vue({
         const response = await fetch(`${backendUrl}/collections/lessons/${sortAspect}/${sortOrder}`); // Fetch using a template string with embeded expressions `${}`.
         const data = await response.json();
         this.lessons = data;
-        console.log(
-          "Fetched custom filtered and sorted lessons:",
-          this.lessons
-        );
+        console.log("Fetched custom filtered and sorted lessons:", this.lessons);
       } catch (error) {
         console.error("Error fetching filtered and sorted lessons:", error);
       }
@@ -174,6 +175,46 @@ let app = new Vue({
       this.sortOrder = "";
       this.searchQuery = "";
       this.fetchLessons();
+    },
+
+    // Debounce method to apply a timeout to the keyword searching method.
+    debounce(func, wait) {
+      let timeout;
+      return (...args) => { // Copy the args using spread syntax (...lesson) and apply the setTimeout method.
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };  
+    },
+
+    // A debounced async keywordSearch method used to keyword search the elements of the database's Lessons collection. 
+    keywordSearch: async function () {
+      try {
+        // Guard statement to reset results if the search query is empty.
+        if (!this.searchQuery.trim()) {
+          this.searchResults = [];
+          this.foundResults = true;
+          return;
+        }
+        // Fetch search results from the backend.
+        const response = await fetch(`${backendUrl}/search?query=${this.searchQuery}`);
+    
+        // If search has completed without error, store the search results
+        const results = await response.json();
+        this.searchResults = results;
+        this.foundResults = results.length > 0; // Set the boolean using a length check.
+    
+      } catch (error) {
+        console.error("Error during search:", error);
+        this.searchResults = [];
+        this.foundResults = false;
+      }
+    },
+
+    // A method to highlight a specific query within a field using css.
+    highlightText(field, query) {
+      if (!query) return field; // Return original if no query
+      const regex = new RegExp(`(${query})`, "gi"); // Match query case-insensitively
+      return field.replace(regex, "<span class='keywordSearchQueryHighlighting'>$1</span>"); // Wrap matched query in <span> to highlight using the css styling.
     },
 
     // A method to add lessons from the shopping page to the users 'Cart'.
@@ -350,9 +391,7 @@ let app = new Vue({
 
           // Guard statement to check the response success allowing for further code to be executed or not.
           if (!response.ok) {
-            console.error(
-              `Failed to ${operation} ${lessonField}: ${response.statusText}`
-            );
+            console.error(`Failed to ${operation} ${lessonField}: ${response.statusText}`);
             return;
           }
 
@@ -428,5 +467,6 @@ let app = new Vue({
     this.fetchLessons(); // Call fetchLessons() method when the Vue instance is created.
     this.fetchCustomerPurchasesAmount();
     setInterval(this.fetchCustomerPurchasesAmount, 60000); // Set an interval time limit of 1 minute before calling the method.
+    this.debouncedSearch = this.debounce(this.keywordSearch, 500); // Convert keywordSearch() method into a debounced method with a timer set to 500ms.
   },
 });
