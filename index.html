@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Below is the link to the stylesheet CSS file -->
+    <!-- Below is the link to the stylesheet CSS file. -->
     <link rel="stylesheet" href="Css/style.css">
-    <!-- Below is the link to the Vue App .js file -->
+    <!-- Below is the link to the Vue App .js file. -->
     <script src="Javascript/vue.js" defer></script>
-    <!-- Below is the link for the Vue.js package -->
+    <!-- Below is the link for the Vue.js package. -->
     <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
     <title>SuperSchoolStore</title>
 </head>
 
 <body>
-    <!-- Below is the header and navigation aspect of the website-->
+    <!-- Below is the header and navigation aspect of the website. -->
     <div id="App">
         <div id="headerContainer">
             <header class="indexPageHeader">
@@ -35,7 +35,7 @@
         </div>
         </header>
         <main>
-            <!-- Below is the landing 'page' and about us aspect of the website-->
+            <!-- Below is the landing 'page' and about us aspect of the website. -->
             <section id="landingPage" v-show="currentPage === 'aboutUs'">
                 <div class="aboutUs">
                     <h2>Welcome to SuperSchoolStore S3!</h2>
@@ -159,7 +159,7 @@
                                     value="descending" v-model="sortOrder" />
                                 Descending
                             </label>
-                            <!-- A button to clear the keyword searching input and filtering checkboxes -->
+                            <!-- A button to clear the keyword searching input and filtering checkboxes. -->
                             <button class="addButton" type="radio" name="display-option" v-on:click="resetFilters">
                                 Clear search & Remove filters</button>
                         </div>
@@ -213,7 +213,7 @@
                         <p>No results found for "{{ searchQuery }}"</p>
                     </div>
                 </div>
-                <!-- Below is the fetched lessons with filtering and sorting -->
+                <!-- Below is the fetched lessons with filtering and sorting, within the shopping section. -->
                 <div v-else class="lesson" v-for="lesson in updatedLessons" :key="lesson.id">
                     <figure>
                         <img v-bind:src="getFullImageUrl(lesson.image)" class="lesson-image" :alt="lesson.title">
@@ -267,7 +267,7 @@
                     <p>Your cart is empty. Please add lessons to your cart to continue with your purchase.</p>
                 </div>
 
-                <!-- Below is the user information, form input-->
+                <!-- Below is the user information, form input. -->
                 <form v-on:submit.prevent="submitCheckout">
                     <h3>Purchase Information</h3>
                     <label>
@@ -280,15 +280,14 @@
                     <label>
                         Surname:
                         <span v-if="!validations.isSurnameValid" class="error">
-                            &nbsp;&nbsp;&nbsp;Surname must be at least 2 characters and can contain letters, spaces, ' -
-                            .
+                            &nbsp;&nbsp;&nbsp;Surname must be at least 2 characters and can contain letters, spaces, ' - .
                         </span>
                         <input type="text" v-model="user.surname" v-on:input="validateSurname" required />
                     </label>
                     <label>
                         Email:
                         <span v-if="!validations.isEmailValid" class="error">
-                            &nbsp;&nbsp;&nbsp;Email must be a valid format, e.g., name@hotmail.com
+                            &nbsp;&nbsp;&nbsp;Email format invalid, please correct; e.g. name@hotmail.com
                         </span>
                         <input type="email" v-model="user.email" v-on:input="validateEmail" />
                     </label>
@@ -327,7 +326,7 @@
                     <label>
                         Card Number:
                         <span v-if="!validations.isCardNumberValid" class="error">
-                            &nbsp;&nbsp;&nbsp;Card number must be exactly 16 digits.
+                            &nbsp;&nbsp;&nbsp;Card number must be exactly 16 digits, no spaces.
                         </span>
                         <input type="tel" v-model="payment.cardNumber" placeholder="#### #### #### ####"
                             v-on:input="validateCardNumber" />
@@ -348,7 +347,7 @@
                         <input type="tel" v-model="payment.cvv" placeholder="###" v-on:input="validateCardCvv" />
                     </label>
 
-                    <!-- Below is the terms and conditions checkbox -->
+                    <!-- Below is the terms and conditions checkbox. -->
                     <label>
                         <input type="checkbox" v-model="user.termsAccepted" />
                         I have read and agree to the Terms and Conditions
@@ -359,7 +358,7 @@
             </section>
 
         </main>
-        <!-- Below is the footer aspect of the website containing a scroll to the top feature -->
+        <!-- Below is the footer aspect of the website containing a scroll to the top feature. -->
         <div class="footerSection">
             <div class="footerDiv">
                 <div>

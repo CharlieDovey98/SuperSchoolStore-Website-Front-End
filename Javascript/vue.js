@@ -32,6 +32,7 @@ let app = new Vue({
       cvv: "",
     },
     validations: {
+      // Checkout form validation aspects.
       isForenameValid: true,
       isSurnameValid: true,
       isPhoneNumberValid: true,
@@ -45,8 +46,7 @@ let app = new Vue({
   },
   },
 
-  computed: {
-    // Below are computed properties that automatically update when their dependent data changes.
+  computed: { // Below are computed properties that automatically update when their dependent data changes.
 
     // A computed method to update the display at the top right of the website, showing the amount of items in the cart.
     itemsInTheCart: function () {
@@ -67,7 +67,7 @@ let app = new Vue({
 
         let lessonInCartCount = 0;
         for (let cartItem of this.cart) {
-          // A for loop through all cart items, if a match between the id's is found, update the cartCount
+          // A for loop through all cart items, if a match between the id's is found, update the cartCount.
           if (cartItem.id === lesson.id) {
             lessonInCartCount++;
           }
@@ -100,7 +100,7 @@ let app = new Vue({
         //this.user.email === this.user.confirmEmail &&
         //this.user.password === this.user.confirmPassword &&       
         //this.user.termsAccepted &&                                // Additional verification and checks.
-        //this.payment.cardNumber &&                                // These options are disabled to meet course requirements.
+        //this.payment.cardNumber &&                                // These options are disabled to meet requirements.
         //this.payment.expiryDate &&
         //this.payment.cvv
       ) {
@@ -178,7 +178,7 @@ let app = new Vue({
       this.fetchLessons();
     },
 
-    // Debounce method to apply a timeout to the keyword searching method.
+    // A debounce method to apply a timeout to the keyword searching method.
     debounce(func, wait) {
       let timeout;
       return (...args) => { // Copy the args using spread syntax (...lesson) and apply the setTimeout method.
@@ -201,10 +201,10 @@ let app = new Vue({
         // Fetch search results from the backend.
         const response = await fetch(`${backendUrl}/search/${this.searchQuery}`);
     
-        // If search has completed without error, store the search results
+        // If search has completed without errors, store the search results.
         const results = await response.json();
         this.searchResults = results;
-        this.foundResults = results.length > 0; // Set the boolean using a length check.
+        this.foundResults = results.length > 0; // Set the foundResults boolean using a length check.
     
       } catch (error) {
         console.error("Error during search:", error);
@@ -215,9 +215,9 @@ let app = new Vue({
 
     // A method to highlight a specific query within a field using css.
     highlightText(field, query) {
-      if (!query) return field; // Return original if no query
-      const regex = new RegExp(`(${query})`, "gi"); // Match query case-insensitively
-      return field.replace(regex, "<span class='keywordSearchQueryHighlighting'>$1</span>"); // Wrap matched query in <span> to highlight using the css styling.
+      if (!query) return field; // Return the original syntax if no query is found.
+      const regex = new RegExp(`(${query})`, "gi"); // Match query case insensitively (i) and look globally through the search fields, finding all matches (g).
+      return field.replace(regex, "<span class='keywordSearchQueryHighlighting'>$1</span>"); // Wrap matched query ($1) in <span> to highlight using the css styling.
     },
 
     // A method to add lessons from the shopping page to the users 'Cart'.
@@ -226,10 +226,7 @@ let app = new Vue({
       if (lesson.spacesAvailable > 0) {
         this.cart.push(lesson);
         lesson.spacesAvailable -= 1;
-        console.log(
-          `${lesson.title} added to cart. Spaces remaining: ${lesson.spacesAvailable}`
-        );
-      } else {
+        console.log(`${lesson.title} added to cart. Spaces remaining: ${lesson.spacesAvailable}`);
       }
     },
 
@@ -239,9 +236,7 @@ let app = new Vue({
       const lesson = this.cart[lessonIndex];
       lesson.spacesAvailable += 1;
       this.cart.splice(lessonIndex, 1);
-      console.log(
-        `${lesson.title} removed from cart. Spaces remaining: ${lesson.spacesAvailable}`
-      );
+      console.log(`${lesson.title} removed from cart. Spaces remaining: ${lesson.spacesAvailable}`);
     },
 
     // A method to scroll to the top of the page.
@@ -249,7 +244,7 @@ let app = new Vue({
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
 
-    // A method to change the layout of the website to 'about us page'.
+    // A method to change the layout of the website to 'aboutUs page'.
     showAboutUs() {
       this.currentPage = "aboutUs";
     },
@@ -262,7 +257,7 @@ let app = new Vue({
     // A method to change the layout of the website to the 'checkout page'.
     showCheckoutPage() {
       if (this.cart.length === 0) {
-        alert("Your cart is empty. Please add a lesson from the lessons page.");
+        alert("Your cart is empty. Please add a lesson from the lessons page."); // Alert is used to conform to requirements, non intrusive alert system would be used otherwise.
         this.currentPage = "shopping"; // Navigate back to the lessons page.
       } else if (this.cart.length > 0) {
         if (this.currentPage === "checkout") {
@@ -276,13 +271,11 @@ let app = new Vue({
     // An async method to update a lesson field with a new value.
     async updateLessonField(lessonId, lessonField, operation, value) {
       try {
-        console.log(
-          `Updating lessonId: ${lessonId}, field: ${lessonField}, operation: ${operation}, value: ${value}`
-        );
+        console.log(`Updating lessonId: ${lessonId}, field: ${lessonField}, operation: ${operation}, value: ${value}`);
         const response = await fetch(`${backendUrl}/collections/lessons/${lessonId}/${lessonField}/${operation}`,{
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ value }), // Send the new value for the field.
+            body: JSON.stringify({ value }), // Send the new value for the field to be updated.
           }
         );
 
@@ -292,10 +285,7 @@ let app = new Vue({
         }
 
         const data = await response.json();
-        console.log(
-          `${operation} operation on ${lessonField} successful:`,
-          data
-        );
+        console.log(`${operation} operation on ${lessonField} successful:`,data);
       } catch (error) {
         console.error("Error updating lesson field:", error);
       }
@@ -353,7 +343,7 @@ let app = new Vue({
             const cartItem = this.cart[i];
             let found = false;
 
-            // A for loop to check if the lesson is already in the lessonsPurchased array.
+            // A nested for loop to check if the lesson is already in the lessonsPurchased array.
             for (let j = 0; j < lessonsPurchased.length; j++) {
               if (lessonsPurchased[j].id === cartItem.id) {
                 lessonsPurchased[j].spacesPurchased += 1; // Increment the amount of spaces purchased if the lesson is already in the lessonsPurchased array.
@@ -387,12 +377,12 @@ let app = new Vue({
 
           // fetch request to add the created purchase to the purchases collection.
           const response = await fetch(`${backendUrl}/collections/purchases`, {
-            method: "POST", // Set the method header as POST.
+            method: "POST", // Set the method as POST.
             headers: { "Content-Type": "application/json" }, // Set the data type to JSON data.
             body: JSON.stringify(purchaseObject), // Stringify the body purchaseObject data.
           });
 
-          // Guard statement to check the response success allowing for further code to be executed or not.
+          // Guard statement to check the response success allowing for the further code to be executed or not.
           if (!response.ok) {
             console.error(`Failed to ${operation} ${lessonField}: ${response.statusText}`);
             return;
@@ -400,7 +390,6 @@ let app = new Vue({
 
           const responseData = await response.json();
           console.log("Purchase response:", responseData);
-
           alert("Purchase complete, Thank you for shopping with S3!");
 
           // Update the lessons in the database for each purchased lesson.
@@ -442,9 +431,7 @@ let app = new Vue({
           );
         }
       } else {
-        alert(
-          "Please fill out all required fields correctly and accept the Terms and Conditions."
-        );
+        alert("Please fill out all required fields correctly and accept the Terms and Conditions.");
       }
     },
   },
