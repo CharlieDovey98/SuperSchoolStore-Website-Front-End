@@ -9,7 +9,7 @@
 *Github Back-End Repository Link*: https://github.com/CharlieDovey98/SuperSchoolStore-Website-Back-End  
 ![SuperSchoolStore-Repositories](projectImages-frontEnd/Github-Project-Repositories.png)  
 
-*Website Images attained from*: (https://www.flaticon.com)  
+*Website Images attained from*: https://www.flaticon.com  
 
 *Front end hosted via GitHub Pages*:  
 https://charliedovey98.github.io/SuperSchoolStore-Website-Front-End/  
